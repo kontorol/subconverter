@@ -836,6 +836,12 @@ void explodeTrojan(std::string trojan, Proxy &node)
         network = "ws";
     }
 
+    if(getUrlArg(addition, "type") == "ws")
+    {
+        path = getUrlArg(addition, "path");
+        network = "ws";
+    }
+
     //Case GRPC
     if(getUrlArg(addition, "type") == "grpc")
     {
