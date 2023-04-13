@@ -1,6 +1,6 @@
 ## 说明
 
-Apple 已知域名均已收录于 China.list 中并作直连策略，如无确切目的不需要额外添加。
+Apple 已知域名均已收录于 China.list چین并作直连策略，如无确切目的不需要额外添加。
 
 对于一些 Apple 被「墙」或者主动「墙」的服务如 App Store Preview、Moveis Trailers、查询外汇、国际航线的 Spotlight、维基百科查询的 Dictionary 均已收录于 Global.list 进行代理。
 
@@ -12,7 +12,7 @@ Apple 已知域名均已收录于 China.list 中并作直连策略，如无确�
 
 **Apple.list**
 
-是 Apple 服务的总体整理，如您想对 Apple 服务均进行代理可以使用该分流文件，需要注意的是建议放置于 Global.list 与 China.list 之间，因 Global.list 有 Apple 对于中国大陆不可用服务的代理行为，如您的 Apple 策略经常在使用直连时会导致 Global.list 中的规则失效。
+是 Apple 服务的总体整理，如您想对 Apple 服务均进行代理可以使用该分流文件，需要注意的是建议放置于 Global.list 与 China.list 之间，因 Global.list 有 Apple 对于چین国大陆不可用服务的代理行为，如您的 Apple 策略经常在使用直连时会导致 Global.list چین的规则失效。
 
 **其他**
 
