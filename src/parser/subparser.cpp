@@ -1077,7 +1077,8 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
                     path = singleproxy["ws-opts"]["path"].IsDefined() ? safe_as<std::string>(singleproxy["ws-opts"]["path"]) : "/";
                     if(singleproxy["ws-opts"]["max-early-data"].IsDefined())
                     {
-                        path = path + "?ed=" + singleproxy["ws-opts"]["max-early-data"];
+                        std::string xpath = singleproxy["ws-opts"]["max-early-data"];
+                        path = path + "?ed=" + xpath;
                     }
                     singleproxy["ws-opts"]["headers"]["Host"] >>= host;
                     singleproxy["ws-opts"]["headers"]["Edge"] >>= edge;
@@ -1226,7 +1227,8 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
                 singleproxy["ws-opts"]["path"] >>= path;
                 if(singleproxy["ws-opts"]["max-early-data"].IsDefined())
                 {
-                    path = path + "?ed=" + singleproxy["ws-opts"]["max-early-data"];
+                    std::string xpath = singleproxy["ws-opts"]["max-early-data"];
+                    path = path + "?ed=" + xpath;
                 }
                 break;
             default:
