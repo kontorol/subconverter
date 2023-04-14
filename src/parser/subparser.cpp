@@ -1033,7 +1033,7 @@ void explodeNetch(std::string netch, Proxy &node)
 void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
 {
     std::string proxytype, ps, server, port, cipher, group, password; //common
-    std::string type = "none", id, aid = "0", net = "tcp", path, host, edge, tls, sni, alpn; //vmess
+    std::string type = "none", id, aid = "0", net = "tcp", path, xpath, host, edge, tls, sni, alpn; //vmess
     std::string plugin, pluginopts, pluginopts_mode, pluginopts_host, pluginopts_mux; //ss
     std::string protocol, protoparam, obfs, obfsparam; //ssr
     std::string flow, mode; //trojan
@@ -1077,7 +1077,7 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
                     path = singleproxy["ws-opts"]["path"].IsDefined() ? safe_as<std::string>(singleproxy["ws-opts"]["path"]) : "/";
                     if(singleproxy["ws-opts"]["max-early-data"].IsDefined())
                     {
-                        std::string xpath = singleproxy["ws-opts"]["max-early-data"];
+                        xpath = safe_as<std::string>(singleproxy["ws-opts"]["max-early-data"]);
                         path = path + "?ed=" + xpath;
                     }
                     singleproxy["ws-opts"]["headers"]["Host"] >>= host;
@@ -1227,7 +1227,7 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
                 singleproxy["ws-opts"]["path"] >>= path;
                 if(singleproxy["ws-opts"]["max-early-data"].IsDefined())
                 {
-                    std::string xpath = singleproxy["ws-opts"]["max-early-data"];
+                    xpath = safe_as<std::string>(singleproxy["ws-opts"]["max-early-data"]);
                     path = path + "?ed=" + xpath;
                 }
                 break;
