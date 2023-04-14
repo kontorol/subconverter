@@ -285,6 +285,13 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                     case "ws"_hash:
                         singleproxy["network"] = x.TransferProtocol;
                         if (ext.clash_new_field_name) {
+                            string_size epos;
+                            epos = x.Path.rfind("?ed=");
+                            if(epos != x.Path.npos)
+                            {
+                                singleproxy["ws-opts"]["max-early-data"] = urlDecode(x.Path.substr(epos + 4));
+                                x.Path.erase(epos);
+                            }
                             singleproxy["ws-opts"]["path"] = x.Path;
                             if (!x.Host.empty())
                                 singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
@@ -363,6 +370,13 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                     case "ws"_hash:
                         singleproxy["network"] = x.TransferProtocol;
                         if (ext.clash_new_field_name) {
+                            string_size epos;
+                            epos = x.Path.rfind("?ed=");
+                            if(epos != x.Path.npos)
+                            {
+                                singleproxy["ws-opts"]["max-early-data"] = urlDecode(x.Path.substr(epos + 4));
+                                x.Path.erase(epos);
+                            }
                             singleproxy["ws-opts"]["path"] = x.Path;
                             if (!x.Host.empty())
                                 singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
@@ -477,6 +491,13 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                         break;
                     case "ws"_hash:
                         singleproxy["network"] = x.TransferProtocol;
+                        string_size epos;
+                        epos = x.Path.rfind("?ed=");
+                        if(epos != x.Path.npos)
+                        {
+                            singleproxy["ws-opts"]["max-early-data"] = urlDecode(x.Path.substr(epos + 4));
+                            x.Path.erase(epos);
+                        }
                         singleproxy["ws-opts"]["path"] = x.Path;
                         if (!x.Host.empty())
                             singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
