@@ -832,13 +832,13 @@ void explodeTrojan(std::string trojan, Proxy &node)
     //Case WS
     if(getUrlArg(addition, "ws") == "1")
     {
-        path = getUrlArg(addition, "wspath");
+        path = urlDecode(getUrlArg(addition, "wspath"));
         network = "ws";
     }
 
     if(getUrlArg(addition, "type") == "ws")
     {
-        path = getUrlArg(addition, "path");
+        path = urlDecode(getUrlArg(addition, "path"));
         network = "ws";
     }
 
