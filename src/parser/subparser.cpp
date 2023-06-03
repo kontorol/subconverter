@@ -1106,8 +1106,12 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
                 edge.clear();
                 break;
             }
-            tls = safe_as<std::string>(singleproxy["tls"]) == "true" ? "tls" : "";
-            
+
+            if (!safe_as<std::string>(singleproxy["tls"]).empty()){
+                singleproxy["tls"] >>= tls;
+            } else {
+                tls = "";
+            }
             
             if (!safe_as<std::string>(singleproxy["reality-opts"]["public-key"]).empty()){
                 singleproxy["reality-opts"]["public-key"] >>= pbk;
