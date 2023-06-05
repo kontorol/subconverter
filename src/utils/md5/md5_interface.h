@@ -2,6 +2,7 @@
 #define MD5_INTERFACE_H_INCLUDED
 
 #include <string>
+#include <cstdint>
 
 #include "md5.h"
 
