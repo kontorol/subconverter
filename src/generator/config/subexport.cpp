@@ -1822,6 +1822,27 @@ proxyToLoon(std::vector<Proxy> &nodes, const std::string &base_conf, std::vector
                 } else if (!plugin.empty())
                     continue;
                 break;
+            case ProxyType::VLESS:
+                if (method == "auto")
+                    method = "chacha20-ietf-poly1305";
+
+                proxy = "vless," + hostname + "," + port + "," + method + ",\"" + id + "\",over-tls:" +
+                        (tlssecure ? "true" : "false");
+                if (tlssecure)
+                    proxy += ",tls-name:" + host;
+                switch (hash_(transproto)) {
+                    case "tcp"_hash:
+                        proxy += ",transport:tcp";
+                        break;
+                    case "ws"_hash:
+                        proxy += ",transport:ws,path:" + path + ",host:" + host;
+                        break;
+                    default:
+                        continue;
+                }
+                if (!scv.is_undef())
+                    proxy += ",skip-cert-verify:" + std::string(scv.get() ? "1" : "0");
+                break;
             case ProxyType::VMess:
                 if (method == "auto")
                     method = "chacha20-ietf-poly1305";
