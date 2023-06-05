@@ -1413,7 +1413,7 @@ void explodeStdHysteria(std::string hysteria, Proxy &node)
 
 void explodeStdVless(std::string vless, Proxy &node)
 {
-    std::string add, port, type, id, aid, net, flow, pbk, sid, fp, mode, path, host, tls, remarks, sni;
+    std::string add, port, type, id, aid, net, flow, pbk, sid, fp, mode, path, host, tls, remarks, sni, alpn;
     std::string addition;
     vless = vless.substr(8);
     string_size pos;
@@ -1435,6 +1435,7 @@ void explodeStdVless(std::string vless, Proxy &node)
     sid = getUrlArg(addition,"sid");
     fp = getUrlArg(addition,"fp");
     sni = getUrlArg(addition, "sni");
+    alpn = getUrlArg(addition, "alpn");
 
     switch(hash_(net))
     {
@@ -1462,7 +1463,7 @@ void explodeStdVless(std::string vless, Proxy &node)
     if(remarks.empty())
         remarks = add + ":" + port;
 
-    vlessConstruct(node, XRAY_DEFAULT_GROUP, remarks, add, port, type, id, aid, net, "auto", flow, mode, path, host, "", tls, sni, pbk, sid, fp);
+    vlessConstruct(node, XRAY_DEFAULT_GROUP, remarks, add, port, type, id, aid, net, "auto", flow, mode, path, host, "", tls, sni, alpn, pbk, sid, fp);
     return;
 }
 
