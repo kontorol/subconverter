@@ -2,6 +2,7 @@
 #define DEF_H_INCLUDED
 
 #include <string>
+#include <cstdint>
 #include <vector>
 #include <tuple>
 
