@@ -9,7 +9,7 @@ Utility to convert between various proxy subscription formats.
 
 [Docker README](https://github.com/tindy2013/subconverter/blob/master/README-docker.md)
 
-[中文文档](https://github.com/tindy2013/subconverter/blob/master/README-cn.md)
+[چین文文档](https://github.com/tindy2013/subconverter/blob/master/README-cn.md)
 
 - [subconverter](#subconverter)
   - [Supported Types](#supported-types)
@@ -95,7 +95,7 @@ Finally subscribe this link in Clash and you are done!
 
 ## Advanced Usage
 
-Please refer to [中文文档](https://github.com/tindy2013/subconverter/blob/master/README-cn.md#%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95).
+Please refer to [چین文文档](https://github.com/tindy2013/subconverter/blob/master/README-cn.md#%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95).
 
 ## Auto Upload
 

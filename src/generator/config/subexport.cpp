@@ -285,6 +285,13 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                     case "ws"_hash:
                         singleproxy["network"] = x.TransferProtocol;
                         if (ext.clash_new_field_name) {
+                            string_size epos;
+                            epos = x.Path.rfind("?ed=");
+                            if(epos != x.Path.npos)
+                            {
+                                singleproxy["ws-opts"]["max-early-data"] = urlDecode(x.Path.substr(epos + 4));
+                                x.Path.erase(epos);
+                            }
                             singleproxy["ws-opts"]["path"] = x.Path;
                             if (!x.Host.empty())
                                 singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
@@ -363,6 +370,13 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                     case "ws"_hash:
                         singleproxy["network"] = x.TransferProtocol;
                         if (ext.clash_new_field_name) {
+                            string_size epos;
+                            epos = x.Path.rfind("?ed=");
+                            if(epos != x.Path.npos)
+                            {
+                                singleproxy["ws-opts"]["max-early-data"] = urlDecode(x.Path.substr(epos + 4));
+                                x.Path.erase(epos);
+                            }
                             singleproxy["ws-opts"]["path"] = x.Path;
                             if (!x.Host.empty())
                                 singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
@@ -477,6 +491,13 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                         break;
                     case "ws"_hash:
                         singleproxy["network"] = x.TransferProtocol;
+                        string_size epos;
+                        epos = x.Path.rfind("?ed=");
+                        if(epos != x.Path.npos)
+                        {
+                            singleproxy["ws-opts"]["max-early-data"] = urlDecode(x.Path.substr(epos + 4));
+                            x.Path.erase(epos);
+                        }
                         singleproxy["ws-opts"]["path"] = x.Path;
                         if (!x.Host.empty())
                             singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
@@ -1800,6 +1821,27 @@ proxyToLoon(std::vector<Proxy> &nodes, const std::string &base_conf, std::vector
                                  replaceAllDistinct(replaceAllDistinct(pluginopts, ";obfs-host=", ","), "obfs=", "");
                 } else if (!plugin.empty())
                     continue;
+                break;
+            case ProxyType::VLESS:
+                if (method == "auto")
+                    method = "chacha20-ietf-poly1305";
+
+                proxy = "vless," + hostname + "," + port + "," + method + ",\"" + id + "\",over-tls:" +
+                        (tlssecure ? "true" : "false");
+                if (tlssecure)
+                    proxy += ",tls-name:" + host;
+                switch (hash_(transproto)) {
+                    case "tcp"_hash:
+                        proxy += ",transport:tcp";
+                        break;
+                    case "ws"_hash:
+                        proxy += ",transport:ws,path:" + path + ",host:" + host;
+                        break;
+                    default:
+                        continue;
+                }
+                if (!scv.is_undef())
+                    proxy += ",skip-cert-verify:" + std::string(scv.get() ? "1" : "0");
                 break;
             case ProxyType::VMess:
                 if (method == "auto")

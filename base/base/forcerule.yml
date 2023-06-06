@@ -20,7 +20,7 @@ log-level: info
 # clash 的 RESTful API
 external-controller: 127.0.0.1:9090
 
-# 您可以将静态网页资源（如 clash-dashboard）放置在一个目录中，clash 将会服务于 `${API}/ui`
+# 您可以将静态网页资源（如 clash-dashboard）放置在一个目录چین，clash 将会服务于 `${API}/ui`
 # 参数应填写配置目录的相对路径或绝对路径。
 # external-ui: folder
 
@@ -34,9 +34,9 @@ dns:
   ipv6: false
   enhanced-mode: fake-ip
   nameserver:
-   - 119.29.29.29
-   - 114.114.114.114
-   - 223.5.5.5
+  - 119.29.29.29
+  - 114.114.114.114
+  - 223.5.5.5
 
 
 
@@ -50,9 +50,9 @@ Proxy:
   cipher: chacha20-ietf-poly1305
   password: "password"
   # udp: true
-
 # Shadowsocks + simple-obfs
 - name: "2"
+
   type: ss
   server: 1.2.4.8
   port: 443
@@ -62,9 +62,9 @@ Proxy:
   plugin-opts:
     mode: tls # or http
     # host: bing.com
-
 # Shadowsocks + v2ray-plugin
 - name: "3"
+
   type: ss
   server: 1.2.4.8
   port: 443
@@ -74,15 +74,15 @@ Proxy:
   plugin-opts:
     mode: websocket # no QUIC now
     # tls: true # wss
-    # skip-cert-verify: true
-    # host: bing.com
-    # path: "/"
-    # mux: true
-    # headers:
-    #   custom: value
-
 # VMess
 - name: "4"
+  # skip-cert-verify: true
+  # host: bing.com
+  # path: "/"
+  # mux: true
+  # headers:
+  #   custom: value
+
   type: vmess
   server: v2ray.cool
   port: 443
@@ -90,42 +90,42 @@ Proxy:
   alterId: 64
   cipher: auto
   # udp: true
-  # tls: true
-  # skip-cert-verify: true
-  # network: ws
-  # ws-path: /path
-  # ws-headers:
-  #   Host: v2ray.com
+# tls: true
+# skip-cert-verify: true
+# network: ws
+# ws-path: /path
+# ws-headers:
+#   Host: v2ray.com
 
 
 # 代理组策略
 Proxy Group:
-# 代理节点选择
-- { name: "Proxy", type: select, proxies: ["1", "2", "3","4"] }
+# 代理انتخاب نود
+- {name: "Proxy", type: select, proxies: ["1", "2", "3", "4"],}
 # 油管
-- { name: "google", type: select, proxies: ["Proxy","1", "2", "3","4"] }
+- {name: "google", type: select, proxies: ["Proxy", "1", "2", "3", "4"],}
 # netflix
-- { name: "netflix", type: select, proxies: ["Proxy","1", "2", "3","4"] }
+- {name: "netflix", type: select, proxies: ["Proxy", "1", "2", "3", "4"],}
 # 动画疯
-- { name: "动画疯", type: select, proxies: ["Proxy","1", "2", "3","4"] }
+- {name: "动画疯", type: select, proxies: ["Proxy", "1", "2", "3", "4"],}
 # 美区影视
-- { name: "美区影视", type: select, proxies: ["Proxy","1", "2", "3","4"] }
+- {name: "美区影视", type: select, proxies: ["Proxy", "1", "2", "3", "4"],}
 # fox+
-- { name: "fox+", type: select, proxies: ["Proxy","1", "2", "3","4"] }
+- {name: "fox+", type: select, proxies: ["Proxy", "1", "2", "3", "4"],}
 # 白名单模式 PROXY，黑名单模式 DIRECT
-- { name: "Final", type: select, proxies: ["Proxy","网易解锁", "DIRECT"] }
+- {name: "Final", type: select, proxies: ["Proxy", "网易解锁", "DIRECT"],}
 # Apple 服务代理
-- { name: "Apple", type: select, proxies: ["DIRECT", "Proxy"] }
+- {name: "Apple", type: select, proxies: ["DIRECT", "Proxy"],}
 # 国际媒体服务
-- { name: "Global_media", type: select, proxies: ["Proxy","网易解锁","1", "2", "3","4"] }
-# 国内媒体服务
-- { name: "Domestic", type: select, proxies: ["DIRECT","网易解锁", "1", "2", "3","4"] }
+- {name: "Global_media", type: select, proxies: ["Proxy", "网易解锁", "1", "2", "3", "4"],}
+# رسانه های داخلی服务
+- {name: "Domestic", type: select, proxies: ["DIRECT", "网易解锁", "1", "2", "3", "4"],}
 #去广告
-- { name: "屏蔽广告", type: select, proxies: ["REJECT","网易解锁", "DIRECT"] }
+- {name: "屏蔽广告", type: select, proxies: ["REJECT", "网易解锁", "DIRECT"],}
 #网易解锁
-- { name: "UnblockNeteaseMusic", type: select, proxies: ["网易解锁"] }
+- {name: "UnblockNeteaseMusic", type: select, proxies: ["网易解锁"],}
 #Telegram
-- { name: "Telegram", type: select, proxies: ["Proxy"] }
+- {name: "Telegram", type: select, proxies: ["Proxy"],}
 
 #规则
 Rule:
@@ -1300,11 +1300,11 @@ Rule:
 - DOMAIN,msg2.video.qiyi.com,屏蔽广告
 - DOMAIN,policy.video.iqiyi.com,屏蔽广告
 - DOMAIN,yuedu.iqiyi.com,屏蔽广告
-- IP-CIDR,101.227.200.0/24,屏蔽广告 
-- IP-CIDR,101.227.200.11/32,屏蔽广告 
-- IP-CIDR,101.227.200.28/32,屏蔽广告 
-- IP-CIDR,101.227.97.240/32,屏蔽广告 
-- IP-CIDR,124.192.153.42/32,屏蔽广告 
+- IP-CIDR,101.227.200.0/24,屏蔽广告
+- IP-CIDR,101.227.200.11/32,屏蔽广告
+- IP-CIDR,101.227.200.28/32,屏蔽广告
+- IP-CIDR,101.227.97.240/32,屏蔽广告
+- IP-CIDR,124.192.153.42/32,屏蔽广告
 
 # ›Hunan TV
 - DOMAIN,click.hunantv.com,屏蔽广告
@@ -1357,20 +1357,20 @@ Rule:
 - DOMAIN,wan.youku.com,屏蔽广告
 - DOMAIN,ykatr.youku.com,屏蔽广告
 - DOMAIN,ykrec.youku.com,屏蔽广告
-- IP-CIDR,117.177.248.17/32,屏蔽广告 
-- IP-CIDR,117.177.248.41/32,屏蔽广告 
-- IP-CIDR,223.87.176.139/32,屏蔽广告 
-- IP-CIDR,223.87.176.176/32,屏蔽广告 
-- IP-CIDR,223.87.177.180/32,屏蔽广告 
-- IP-CIDR,223.87.177.182/32,屏蔽广告 
-- IP-CIDR,223.87.177.184/32,屏蔽广告 
-- IP-CIDR,223.87.177.43/32,屏蔽广告 
-- IP-CIDR,223.87.177.47/32,屏蔽广告 
-- IP-CIDR,223.87.177.80/32,屏蔽广告 
-- IP-CIDR,223.87.182.101/32,屏蔽广告 
-- IP-CIDR,223.87.182.102/32,屏蔽广告 
-- IP-CIDR,223.87.182.11/32,屏蔽广告 
-- IP-CIDR,223.87.182.52/32,屏蔽广告 
+- IP-CIDR,117.177.248.17/32,屏蔽广告
+- IP-CIDR,117.177.248.41/32,屏蔽广告
+- IP-CIDR,223.87.176.139/32,屏蔽广告
+- IP-CIDR,223.87.176.176/32,屏蔽广告
+- IP-CIDR,223.87.177.180/32,屏蔽广告
+- IP-CIDR,223.87.177.182/32,屏蔽广告
+- IP-CIDR,223.87.177.184/32,屏蔽广告
+- IP-CIDR,223.87.177.43/32,屏蔽广告
+- IP-CIDR,223.87.177.47/32,屏蔽广告
+- IP-CIDR,223.87.177.80/32,屏蔽广告
+- IP-CIDR,223.87.182.101/32,屏蔽广告
+- IP-CIDR,223.87.182.102/32,屏蔽广告
+- IP-CIDR,223.87.182.11/32,屏蔽广告
+- IP-CIDR,223.87.182.52/32,屏蔽广告
 
 # ›Letv
 - DOMAIN,api.game.letvstore.com,屏蔽广告

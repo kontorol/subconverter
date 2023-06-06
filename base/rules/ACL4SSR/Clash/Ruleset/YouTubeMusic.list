@@ -1,5 +1,5 @@
-# 内容：YouTubeMusic
-# 数量：5条
+# content：YouTubeMusic
+# quantity：5条
 USER-AGENT,*YouTubeMusic*
 USER-AGENT,*com.google.ios.youtubemusic*
 USER-AGENT,YouTubeMusic*

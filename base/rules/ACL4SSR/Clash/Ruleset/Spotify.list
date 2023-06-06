@@ -1,5 +1,5 @@
-# 内容：Spotify
-# 数量：9条
+# content：Spotify
+# quantity：9条
 USER-AGENT,Spotify*
 DOMAIN-KEYWORD,-spotify-com
 DOMAIN-KEYWORD,spotify.com
