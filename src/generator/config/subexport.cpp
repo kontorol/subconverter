@@ -35,7 +35,7 @@ const string_array clash_ssr_ciphers = {"rc4-md5", "aes-128-ctr", "aes-192-ctr",
 std::string
 vmessLinkConstruct(const std::string &remarks, const std::string &add, const std::string &port, const std::string &type,
                    const std::string &id, const std::string &aid, const std::string &net, const std::string &path,
-                   const std::string &host, const std::string &tls) {
+                   const std::string &host, const std::string &tls, const std::string &alpn, const std::string &fp) {
     rapidjson::StringBuffer sb;
     rapidjson::Writer <rapidjson::StringBuffer> writer(sb);
     writer.StartObject();
@@ -61,6 +61,42 @@ vmessLinkConstruct(const std::string &remarks, const std::string &add, const std
     writer.String(host.data());
     writer.Key("tls");
     writer.String(tls.data());
+    writer.Key("alpn");
+    writer.String(alpn.data());
+    writer.Key("fp");
+    writer.String(fp.data());
+    writer.Key("sni");
+    writer.String(host.data());
+    writer.EndObject();
+    return sb.GetString();
+}
+std::string
+vlessLinkConstruct(const std::string &remarks, const std::string &add, const std::string &port, const std::string &type,
+                   const std::string &id, const std::string &aid, const std::string &net, const std::string &path,
+                   const std::string &host) {
+    rapidjson::StringBuffer sb;
+    rapidjson::Writer <rapidjson::StringBuffer> writer(sb);
+    writer.StartObject();
+    writer.Key("v");
+    writer.String("2");
+    writer.Key("ps");
+    writer.String(remarks.data());
+    writer.Key("add");
+    writer.String(add.data());
+    writer.Key("port");
+    writer.String(port.data());
+    writer.Key("type");
+    writer.String(type.empty() ? "none" : type.data());
+    writer.Key("id");
+    writer.String(id.data());
+    writer.Key("aid");
+    writer.String(aid.data());
+    writer.Key("net");
+    writer.String(net.empty() ? "tcp" : net.data());
+    writer.Key("path");
+    writer.String(path.data());
+    writer.Key("host");
+    writer.String(host.data());
     writer.EndObject();
     return sb.GetString();
 }
@@ -231,7 +267,7 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
             if (!x.ShortId.empty())
                 singleproxy["reality-opts"]["short-id"] = x.ShortId;
         }
-        singleproxy["client-fingerprint"] = "chrome";
+        singleproxy["client-fingerprint"] = "";
         if (!x.Fingerprint.empty())
             singleproxy["client-fingerprint"] = x.Fingerprint;
         switch (x.Type) {
@@ -271,6 +307,8 @@ proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGroupCo
                 singleproxy["alterId"] = x.AlterId;
                 singleproxy["cipher"] = x.EncryptMethod;
                 singleproxy["tls"] = x.TLSSecure;
+                if (!x.Alpn.empty())
+                    singleproxy["alpn"].push_back(x.Alpn);
                 if (xudp && udp)
                     singleproxy["xudp"] = true;
                 if (!tfo.is_undef())
@@ -916,6 +954,7 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
     /// types: SS=1 SSR=2 VMess=4 Trojan=8
     std::string remark, hostname, port, password, method;
     std::string plugin, pluginopts;
+    std::string pbk, sid, fp, sni, alpn, flow;
     std::string protocol, protoparam, obfs, obfsparam;
     std::string id, aid, transproto, faketype, host, path, quicsecure, quicsecret;
     std::string proxyStr, allLinks;
@@ -923,8 +962,9 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
 
     for (Proxy &x: nodes) {
         remark = x.Remark;
+        std::string &pbk = x.PublicKey, &sid = x.ShortId, &fp = x.Fingerprint, &alpn = x.Alpn, &flow = x.Flow;
         std::string &hostname = x.Hostname, &password = x.Password, &method = x.EncryptMethod, &plugin = x.Plugin, &pluginopts = x.PluginOption, &protocol = x.Protocol, &protoparam = x.ProtocolParam, &obfs = x.OBFS, &obfsparam = x.OBFSParam, &id = x.UserId, &transproto = x.TransferProtocol, &host = x.Host, &path = x.Path, &faketype = x.FakeType;
-        bool &tlssecure = x.TLSSecure;
+        bool &tlssecure = x.TLSSecure, RealitySecure = false;
         std::string port = std::to_string(x.Port);
         std::string aid = std::to_string(x.AlterId);
 
@@ -966,20 +1006,65 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
                     continue;
                 proxyStr = "vmess://" + base64Encode(
                         vmessLinkConstruct(remark, hostname, port, faketype, id, aid, transproto, path, host,
-                                           tlssecure ? "tls" : ""));
+                                           tlssecure ? "tls" : "", alpn, fp));
+                break;
+            case ProxyType::VLESS:
+                if (!vmess)
+                    continue;
+                proxyStr = "vless://" + id + "@" + hostname + ":" + port + "?aid=0" + "&allowInsecure=" +
+                           (x.AllowInsecure.get() ? "1" : "0") + "&encryption=none";
+                if (!host.empty()){
+                    proxyStr += "&host=" + host;
+                    proxyStr += "&sni=" + host;
+                }
+                if (transproto == "ws") {
+                    proxyStr += "&type=ws";
+                    if (!path.empty())
+                        proxyStr += "&path=" + urlEncode(path);
+                }
+                if (!pbk.empty()){
+                    proxyStr += "&pbk=" + urlEncode(pbk);
+                    if (!pbk.empty())
+                        proxyStr += "&sid=" + urlEncode(sid);
+                        tlssecure = false;
+                        RealitySecure = true;
+                }
+                proxyStr += "&security=";
+                proxyStr += tlssecure ? "tls" : "";
+                proxyStr += RealitySecure ? "reality" : "";
+                if (!fp.empty())
+                    proxyStr += "&fp=" + urlEncode(fp);
+                if (!alpn.empty())
+                    proxyStr += "&alpn=" + urlEncode(alpn);
+                if (!flow.empty())
+                    proxyStr += "&flow=" + urlEncode(flow);    
+                proxyStr += "#" + urlEncode(remark);
                 break;
             case ProxyType::Trojan:
                 if (!trojan)
                     continue;
                 proxyStr = "trojan://" + password + "@" + hostname + ":" + port + "?allowInsecure=" +
-                           (x.AllowInsecure.get() ? "1" : "0");
-                if (!host.empty())
+                           (x.AllowInsecure.get() ? "1" : "0") + "&encryption=none";
+                if (!host.empty()){
+                    proxyStr += "&host=" + host;
                     proxyStr += "&sni=" + host;
-                if (transproto == "ws") {
-                    proxyStr += "&ws=1";
-                    if (!path.empty())
-                        proxyStr += "&wspath=" + urlEncode(path);
                 }
+                if (transproto == "ws") {
+                    proxyStr += "&type=ws";
+                    if (!path.empty())
+                        proxyStr += "&path=" + urlEncode(path);
+                }
+                proxyStr += "&security=";
+                proxyStr += tlssecure ? "tls" : "";
+                if (!fp.empty())
+                    proxyStr += "&fp=" + urlEncode(fp);
+
+                if (!alpn.empty())
+                    proxyStr += "&alpn=" + urlEncode(alpn);
+
+                if (!flow.empty())
+                    proxyStr += "&flow=" + urlEncode(flow);
+
                 proxyStr += "#" + urlEncode(remark);
                 break;
             default:

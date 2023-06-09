@@ -1,2 +1,7 @@
-subconverter.exe
-.vscode
+subconverter*
+/yaml-cpp/*
+/toml11/*
+/quickjspp/*
+/libcron/*
+/curl/*
+/build/*
