@@ -979,7 +979,6 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
     /// types: SS=1 SSR=2 VMess=4 Trojan=8
     std::string remark, hostname, port, password, method;
     std::string plugin, pluginopts;
-    std::string pbk, sid, fp, sni, alpn, flow;
     std::string protocol, protoparam, obfs, obfsparam;
     std::string id, aid, transproto, faketype, host, path, quicsecure, quicsecret;
     std::string proxyStr, allLinks;
@@ -989,7 +988,7 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
     {
         std::string remark = x.Remark;
         std::string &hostname = x.Hostname, &password = x.Password, &method = x.EncryptMethod, &plugin = x.Plugin, &pluginopts = x.PluginOption, &protocol = x.Protocol, &protoparam = x.ProtocolParam, &obfs = x.OBFS, &obfsparam = x.OBFSParam, &id = x.UserId, &transproto = x.TransferProtocol, &host = x.Host, &path = x.Path, &faketype = x.FakeType, &pbk = x.PublicKey, &sid = x.ShortId, &fp = x.Fingerprint, &alpn = x.Alpn, &flow = x.Flow;
-        bool &tlssecure = x.TLSSecure;
+        bool &tlssecure = x.TLSSecure, RealitySecure = false;
         std::string port = std::to_string(x.Port);
         std::string aid = std::to_string(x.AlterId);
 
