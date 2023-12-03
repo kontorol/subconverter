@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <tuple>
+#include <cstdint>
 
 #include "../utils/string.h"
 #include "../utils/tribool.h"
