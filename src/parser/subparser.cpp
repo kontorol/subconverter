@@ -94,8 +94,8 @@ void vlessConstruct(Proxy &node, const std::string &group, const std::string &re
     node.Flow = flow;
     node.FakeType = type;
     node.TLSSecure = tls == "tls" || tls == "xtls" || tls == "reality";
-    node.PublicKey = tls == "reality" ? pbk : "";
-    node.ShortId = tls == "reality" ? sid : "";
+    node.PublicKey = pbk;
+    node.ShortId = sid;
     node.Fingerprint = fp;
 
     switch(hash_(net))
@@ -1042,20 +1042,23 @@ void explodeNetch(std::string netch, Proxy &node)
 
 void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
 {
-    std::string proxytype, ps, server, port, cipher, group, password; //common
-    std::string type = "none", id, aid = "0", net = "tcp", path, xpath, host, edge, tls, sni, alpn; //vmess
-    std::string fp="chrome",pbk,sid; //vless
-    std::string plugin, pluginopts, pluginopts_mode, pluginopts_host, pluginopts_mux, pluginopts_version, pluginopts_password; //ss
-    std::string protocol, protoparam, obfs, obfsparam; //ssr
-    std::string flow, mode; //trojan
-    std::string user; //socks
-    std::string auth,up,down,obfsParam,insecure;//hysteria
-    tribool udp, tfo, scv;
+
+    
     Node singleproxy;
     uint32_t index = nodes.size();
     const std::string section = yamlnode["proxies"].IsDefined() ? "proxies" : "Proxy";
     for(uint32_t i = 0; i < yamlnode[section].size(); i++)
     {
+        std::string fp="chrome",pbk,sid; //vless
+        std::string proxytype, ps, server, port, cipher, group, password; //common
+        std::string type = "none", id, aid = "0", net = "tcp", path, xpath, host, edge, tls, sni, alpn; //vmess
+        std::string plugin, pluginopts, pluginopts_mode, pluginopts_host, pluginopts_mux, pluginopts_version, pluginopts_password; //ss
+        std::string protocol, protoparam, obfs, obfsparam; //ssr
+        std::string flow, mode; //trojan
+        std::string user; //socks
+        std::string auth,up,down,obfsParam,insecure;//hysteria
+        tribool udp, tfo, scv;
+        
         Proxy node;
         singleproxy = yamlnode[section][i];
         singleproxy["type"] >>= proxytype;
@@ -1068,59 +1071,7 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
         scv = safe_as<std::string>(singleproxy["skip-cert-verify"]);
         switch(hash_(proxytype))
         {
-        case "vless"_hash:
-            group = XRAY_DEFAULT_GROUP;
-
-            singleproxy["uuid"] >>= id;
-            singleproxy["alterId"] >>= aid;
-            net = singleproxy["network"].IsDefined() ? safe_as<std::string>(singleproxy["network"]) : "tcp";
-            sni = singleproxy["sni"].IsDefined() ? safe_as<std::string>(singleproxy["sni"]) : safe_as<std::string>(singleproxy["servername"]) ;
-            switch(hash_(net))
-            {
-            case "http"_hash:
-                singleproxy["http-opts"]["path"][0] >>= path;
-                singleproxy["http-opts"]["headers"]["Host"][0] >>= host;
-                edge.clear();
-                break;
-            case "ws"_hash:
-                if(singleproxy["ws-opts"].IsDefined())
-                {
-                    path = singleproxy["ws-opts"]["path"].IsDefined() ? safe_as<std::string>(singleproxy["ws-opts"]["path"]) : "/";
-                    singleproxy["ws-opts"]["headers"]["Host"] >>= host;
-                    singleproxy["ws-opts"]["headers"]["Edge"] >>= edge;
-                }
-                else
-                {
-                    path = singleproxy["ws-path"].IsDefined() ? safe_as<std::string>(singleproxy["ws-path"]) : "/";
-                    singleproxy["ws-headers"]["Host"] >>= host;
-                    singleproxy["ws-headers"]["Edge"] >>= edge;
-                }
-                break;
-            case "h2"_hash:
-                singleproxy["h2-opts"]["path"] >>= path;
-                singleproxy["h2-opts"]["host"][0] >>= host;
-                edge.clear();
-                break;
-            case "grpc"_hash:
-                singleproxy["servername"] >>= host;
-                singleproxy["grpc-opts"]["grpc-service-name"] >>= path;
-                edge.clear();
-                break;
-            }
-
-            tls = safe_as<std::string>(singleproxy["tls"]) == "true" ? "tls" : "";
-            if(singleproxy["reality-opts"].IsDefined())
-            {
-                host = singleproxy["sni"].IsDefined() ? safe_as<std::string>(singleproxy["sni"]) : safe_as<std::string>(singleproxy["servername"]) ;
-                printf("host:%s",host.c_str());
-                singleproxy["reality-opts"]["public-key"]>>=pbk;
-                singleproxy["reality-opts"]["short-id"]>>=sid;
-            }
-            singleproxy["flow"]>>=flow;
-
-            vlessConstruct(node, XRAY_DEFAULT_GROUP, ps, server, port, type, id, aid, net, "auto", flow, mode, path, host, "", tls, pbk, sid, fp);
-            break;
-                case "vmess"_hash:
+        case "vmess"_hash:
             group = V2RAY_DEFAULT_GROUP;
 
             singleproxy["uuid"] >>= id;
@@ -1174,6 +1125,58 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
 
             vmessConstruct(node, group, ps, server, port, "", id, aid, net, cipher, path, host, edge, tls, sni, fp, alpn, udp, tfo, scv);
             break;
+        case "vless"_hash:
+            group = XRAY_DEFAULT_GROUP;
+
+            singleproxy["uuid"] >>= id;
+            singleproxy["alterId"] >>= aid;
+            net = singleproxy["network"].IsDefined() ? safe_as<std::string>(singleproxy["network"]) : "tcp";
+            sni = singleproxy["sni"].IsDefined() ? safe_as<std::string>(singleproxy["sni"]) : safe_as<std::string>(singleproxy["servername"]) ;
+            switch(hash_(net))
+            {
+            case "http"_hash:
+                singleproxy["http-opts"]["path"][0] >>= path;
+                singleproxy["http-opts"]["headers"]["Host"][0] >>= host;
+                edge.clear();
+                break;
+            case "ws"_hash:
+                if(singleproxy["ws-opts"].IsDefined())
+                {
+                    path = singleproxy["ws-opts"]["path"].IsDefined() ? safe_as<std::string>(singleproxy["ws-opts"]["path"]) : "/";
+                    singleproxy["ws-opts"]["headers"]["Host"] >>= host;
+                    singleproxy["ws-opts"]["headers"]["Edge"] >>= edge;
+                }
+                else
+                {
+                    path = singleproxy["ws-path"].IsDefined() ? safe_as<std::string>(singleproxy["ws-path"]) : "/";
+                    singleproxy["ws-headers"]["Host"] >>= host;
+                    singleproxy["ws-headers"]["Edge"] >>= edge;
+                }
+                break;
+            case "h2"_hash:
+                singleproxy["h2-opts"]["path"] >>= path;
+                singleproxy["h2-opts"]["host"][0] >>= host;
+                edge.clear();
+                break;
+            case "grpc"_hash:
+                singleproxy["servername"] >>= host;
+                singleproxy["grpc-opts"]["grpc-service-name"] >>= path;
+                edge.clear();
+                break;
+            }
+
+            tls = safe_as<std::string>(singleproxy["tls"]) == "true" ? "tls" : "";
+            if(singleproxy["reality-opts"].IsDefined())
+            {
+                host = singleproxy["sni"].IsDefined() ? safe_as<std::string>(singleproxy["sni"]) : safe_as<std::string>(singleproxy["servername"]) ;
+                printf("host:%s",host.c_str());
+                singleproxy["reality-opts"]["public-key"]>>=pbk;
+                singleproxy["reality-opts"]["short-id"]>>=sid;
+            }
+            singleproxy["flow"]>>=flow;
+
+            vlessConstruct(node, XRAY_DEFAULT_GROUP, ps, server, port, type, id, aid, net, "auto", flow, mode, path, host, "", tls, pbk, sid, fp);
+            break;        
         case "ss"_hash:
             group = SS_DEFAULT_GROUP;
 
