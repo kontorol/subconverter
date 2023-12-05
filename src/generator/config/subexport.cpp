@@ -984,7 +984,7 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
     {
         std::string remark = x.Remark;
         std::string &pbk = x.PublicKey, &sid = x.ShortId, &fp = x.Fingerprint, &alpn = x.Alpn, &flow = x.Flow;
-        std::string &hostname = x.Hostname, &password = x.Password, &method = x.EncryptMethod, &plugin = x.Plugin, &pluginopts = x.PluginOption, &protocol = x.Protocol, &protoparam = x.ProtocolParam, &obfs = x.OBFS, &obfsparam = x.OBFSParam, &id = x.UserId, &transproto = x.TransferProtocol, &host = x.Host, &path = x.Path, &faketype = x.FakeType;
+        std::string &hostname = x.Hostname, &password = x.Password, &method = x.EncryptMethod, &plugin = x.Plugin, &pluginopts = x.PluginOption, &protocol = x.Protocol, &protoparam = x.ProtocolParam, &obfs = x.OBFS, &obfsparam = x.OBFSParam, &id = x.UserId, &transproto = x.TransferProtocol, &host = x.Host, &path = x.Path, &faketype = x.FakeType, &grpcpath = x.GRPCServiceName;
         bool &tlssecure = x.TLSSecure, RealitySecure = false;
         std::string port = std::to_string(x.Port);
         std::string aid = std::to_string(x.AlterId);
@@ -1042,6 +1042,11 @@ std::string proxyToSingle(std::vector<Proxy> &nodes, int types, extra_settings &
                     proxyStr += "&type=ws";
                     if (!path.empty())
                         proxyStr += "&path=" + urlEncode(path);
+                }
+                if (transproto == "grpc") {
+                    proxyStr += "&type=grpc";
+                    if (!grpcpath.empty())
+                        proxyStr += "&serviceName=" + urlEncode(grpcpath);
                 }
                 if (!pbk.empty()){
                     proxyStr += "&pbk=" + urlEncode(pbk);

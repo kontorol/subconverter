@@ -1161,6 +1161,7 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
             case "grpc"_hash:
                 singleproxy["servername"] >>= host;
                 singleproxy["grpc-opts"]["grpc-service-name"] >>= path;
+                singleproxy["grpc-opts"]["grpc-mode"] >>= mode;
                 edge.clear();
                 break;
             }
